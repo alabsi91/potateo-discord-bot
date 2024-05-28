@@ -1,33 +1,78 @@
-<h1 style="text-align:center;">Discord.js v14 Bot Template</h1>
+# Potateo discord bot
 
-## Features
+## Environment variables
 
-* 🟦 Typescript
-* 🔥 Slash commands (supports auto complete!)
-* ✉️ Message commands
-* 🕛 Cooldowns
-* 🏴 Detailed Permissions
-* 💪 Event & Command handlers
-* 🍃 MongoDB Support
+- Using bash
 
-## Installation, Build and Run
-1) Clone the repository then create a file named `.env` and fill it out accordingly
-```js
-TOKEN=YOURTOKENHERE
-CLIENT_ID=BOTS CLIENT ID
-PREFIX=!
-MONGO_URI=YOUR MONGO CONNECTION STRING
-MONGO_DATABASE_NAME=YOUR DATABASE NAME
+```bash
+export TOKEN=YOUR_TOKEN_HERE
+export CLIENT_ID=YOUR_CLIENT_ID_HERE
+# firebase config
+export API_KEY=YOUR_API_KEY_HERE
+export AUTH_DOMAIN=YOUR_AUTH_DOMAIN_HERE
+export PROJECT_ID=YOUR_PROJECT_ID_HERE
+export STORAGE_BUCKET=YOUR_STORAGE_BUCKET_HERE
+export MESSAGING_SENDER_ID=YOUR_MESSAGING_SENDER_ID_HERE
+export APP_ID=YOUR_APP_ID_HERE
 ```
-2) Install typescript, To install TypeScript, you can run the following command in your terminal, This will install the latest version of TypeScript globally on your computer. (You can skip this if you already have typescript installed)
-  ```ts
-  npm install -g typescript
-  ```
-3) Compile your TypeScript code to JavaScript by running the following command:
-```js
-tsc
+
+- Using Powershell
+
+```pwsh
+set TOKEN=YOUR_TOKEN_HERE
+set CLIENT_ID=YOUR_CLIENT_ID_HERE
+# firebase config
+set API_KEY=YOUR_API_KEY_HERE
+set AUTH_DOMAIN=YOUR_AUTH_DOMAIN_HERE
+set PROJECT_ID=YOUR_PROJECT_ID_HERE
+set STORAGE_BUCKET=YOUR_STORAGE_BUCKET_HERE
+set MESSAGING_SENDER_ID=YOUR_MESSAGING_SENDER_ID_HERE
+set APP_ID=YOUR_APP_ID_HERE
 ```
-4) Once the build is complete it will generated a folder named `build` that contains compiled version of your ts code to js. You can run the following command in your terminal to run the project:
-```js
-npm start
+
+- Using `.env` file
+
+```pwsh
+TOKEN=YOUR_TOKEN_HERE;
+CLIENT_ID=YOUR_CLIENT_ID_HERE;
+# firebase config
+API_KEY=YOUR_API_KEY_HERE
+AUTH_DOMAIN=YOUR_AUTH_DOMAIN_HERE
+PROJECT_ID=YOUR_PROJECT_ID_HERE
+STORAGE_BUCKET=YOUR_STORAGE_BUCKET_HERE
+MESSAGING_SENDER_ID=YOUR_MESSAGING_SENDER_ID_HERE
+APP_ID=YOUR_APP_ID_HERE
+```
+
+## Firebase data structure
+
+| Collection | Document |      Data      |
+| :--------: | :------: | :------------: |
+|   Guilds   | GuildId  | `FirebaseData` |
+|    \_\_    |   \_\_   |      \_\_      |
+|   Shared   |   bot    | `BotActivity`  |
+
+```ts
+type BotActivity = {
+  activity: string;
+  type: ActivityUnionType;
+};
+
+type CustomCommands = {
+  when: string;
+  say: string;
+};
+
+type VoiceWelcomeMessage = {
+  id: string;
+  message: string;
+  lang: Languages;
+};
+
+type FirebaseData = {
+  voiceMessages: VoiceWelcomeMessage[];
+  customCommands: CustomCommands[];
+  savedList: string[];
+  prefix: string;
+};
 ```

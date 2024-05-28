@@ -1,40 +1,50 @@
-import { Client, Routes, SlashCommandBuilder } from "discord.js";
-import { REST } from "@discordjs/rest"
-import { readdirSync } from "fs";
-import { join } from "path";
-import { color } from "../functions";
-import { Command, SlashCommand } from "../types";
+import chalk from 'chalk';
+import { REST, Routes } from 'discord.js';
+import { readdir } from 'fs/promises';
+import path from 'path';
 
-module.exports = (client : Client) => {
-    const slashCommands : SlashCommandBuilder[] = []
-    const commands : Command[] = []
+import { Log } from '../logger.js';
 
-    let slashCommandsDir = join(__dirname,"../slashCommands")
-    let commandsDir = join(__dirname,"../commands")
+import type { Client, SlashCommandBuilder } from 'discord.js';
+import type { Command, SlashCommand } from '../types.js';
 
-    readdirSync(slashCommandsDir).forEach(file => {
-        if (!file.endsWith(".js")) return;
-        let command : SlashCommand = require(`${slashCommandsDir}/${file}`).default
-        slashCommands.push(command.command)
-        client.slashCommands.set(command.command.name, command)
-    })
+export default async function (client: Client) {
+  const slashCommands: SlashCommandBuilder[] = [];
+  const commands: Command[] = [];
 
-    readdirSync(commandsDir).forEach(file => {
-        if (!file.endsWith(".js")) return;
-        let command : Command = require(`${commandsDir}/${file}`).default
-        commands.push(command)
-        client.commands.set(command.name, command)
-    })
+  // Slash commands
+  const slashCommandsDir = 'slashCommands';
 
-    const rest = new REST({version: "10"}).setToken(process.env.TOKEN);
+  const slashCommandsFiles = await readdir(path.join(path.scriptPath, slashCommandsDir));
+  for (const file of slashCommandsFiles) {
+    if (!file.endsWith('.js')) continue;
 
-    rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
-        body: slashCommands.map(command => command.toJSON())
-    })
-    .then((data : any) => {
-        console.log(color("text", `🔥 Successfully loaded ${color("variable", data.length)} slash command(s)`))
-        console.log(color("text", `🔥 Successfully loaded ${color("variable", commands.length)} command(s)`))
-    }).catch(e => {
-        console.log(e)
-    })
+    const command: SlashCommand = (await import(`../${slashCommandsDir}/${file}`)).default;
+    slashCommands.push(command.command);
+
+    client.slashCommands.set(command.command.name, command);
+  }
+
+  // commands
+  const commandsDir = 'commands';
+
+  const commandsFiles = await readdir(path.join(path.scriptPath, commandsDir));
+  for (const file of commandsFiles) {
+    if (!file.endsWith('.js')) continue;
+
+    const command: Command = (await import(`../${commandsDir}/${file}`)).default;
+    commands.push(command);
+
+    client.commands.set(command.name, command);
+  }
+
+  // register slash commands
+  const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+
+  const data = await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
+    body: slashCommands.map(command => command.toJSON()),
+  });
+
+  Log.success('Successfully loaded', chalk.white.bold((data as unknown[]).length), 'slash command(s)');
+  Log.success('Successfully loaded', chalk.white.bold(commands.length), 'command(s)');
 }

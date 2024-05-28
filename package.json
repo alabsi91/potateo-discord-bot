@@ -1,27 +1,52 @@
 {
-    "name": "discordjs-v14-template-ts",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "start": "cls && node build/index.js",
-        "build": "tsc"
-    },
-    "keywords": [],
-    "author": "MericcaN41",
-    "license": "ISC",
-    "dependencies": {
-        "@discordjs/rest": "^1.1.0",
-        "@types/node": "^18.7.14",
-        "chalk": "^4.1.2",
-        "discord.js": "14.3.0",
-        "dotenv": "^16.0.2",
-        "mongoose": "^6.5.4"
-    },
-    "devDependencies": {
-        "typescript": "^4.8.2"
-    },
-    "overrides": {
-        "discord-api-types": "0.37.20"
-    }
+  "name": "potateo-bot",
+  "version": "1.0.0",
+  "description": "Discord Bot",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --no-warnings=ExperimentalWarning build/index.js",
+    "build": "babel src -d build --extensions .ts --copy-files",
+    "test": "tsc --noEmit && eslint src/**/*.ts",
+    "create-slash-command": "node scripts/createSlashCommand.js",
+    "create-command": "node scripts/createCommand.js",
+    "postinstall": "npm run build"
+  },
+  "keywords": [],
+  "author": "Ahmed AlAbsi",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/voice": "^0.17.0",
+    "archiver": "^7.0.1",
+    "axios": "^1.7.2",
+    "canvas": "^2.11.2",
+    "chalk": "^5.3.0",
+    "discord.js": "^14.15.2",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.27.0",
+    "firebase": "^10.12.1",
+    "libsodium-wrappers": "^0.7.13",
+    "webtorrent": "^2.3.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.6",
+    "@babel/core": "^7.24.6",
+    "@babel/node": "^7.24.6",
+    "@babel/plugin-syntax-import-attributes": "^7.24.6",
+    "@babel/preset-env": "^7.24.6",
+    "@babel/preset-typescript": "^7.24.6",
+    "@types/archiver": "^6.0.2",
+    "@types/node": "^20.12.12",
+    "@types/webtorrent": "^0.109.8",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "@typescript-eslint/parser": "^7.10.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "overrides": {
+    "discord-api-types": "0.37.85"
+  }
 }

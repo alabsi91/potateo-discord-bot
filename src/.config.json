@@ -1,0 +1,23 @@
+{
+  "prefix": "!",
+  "log": {
+    "enabled": false,
+    "level": ["INFO", "WARNING", "ERROR", "SUCCESS"],
+    "path": "./bot.log"
+  },
+  "torrent": {
+    "downloadDir": "./assets/downloads",
+    "zipDir": "./assets/zips",
+    "videoExtensions": ["mp4", "mkv", "avi", "webm", "mov", "flv"]
+  },
+  "rest": {
+    "host": "127.0.0.1",
+    "port": 3000,
+    "domain": "http://127.0.0.1:3000",
+    "zip": "/zip/:fileName",
+    "streamLink": "/stream/:fileName",
+    "downloadLink": "/download/:fileName",
+    "browserLink": "/browser/:fileName"
+  },
+  "ttsTempFile": "./assets/sounds/say.mp3"
+}

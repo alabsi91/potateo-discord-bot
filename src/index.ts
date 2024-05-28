@@ -1,20 +1,36 @@
-import { Client, GatewayIntentBits, Collection, PermissionFlagsBits,} from "discord.js";
-const { Guilds, MessageContent, GuildMessages, GuildMembers } = GatewayIntentBits
-const client = new Client({intents:[Guilds, MessageContent, GuildMessages, GuildMembers]})
-import { Command, SlashCommand } from "./types";
-import { config } from "dotenv";
-import { readdirSync } from "fs";
-import { join } from "path";
-config()
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { config } from 'dotenv';
+import { readdirSync } from 'fs';
+import path from 'path';
 
-client.slashCommands = new Collection<string, SlashCommand>()
-client.commands = new Collection<string, Command>()
-client.cooldowns = new Collection<string, number>()
+import { registerPathExtension } from './utils.js';
 
-const handlersDir = join(__dirname, "./handlers")
-readdirSync(handlersDir).forEach(handler => {
-    if (!handler.endsWith(".js")) return;
-    require(`${handlersDir}/${handler}`)(client)
-})
+import type { Command, SlashCommand } from './types.js';
+import { startRestServer } from './rest/rest.js';
 
-client.login(process.env.TOKEN)
+// register path extensions
+registerPathExtension();
+
+// load .env
+config();
+
+const { Guilds, GuildVoiceStates, MessageContent, GuildMessages, GuildMembers } = GatewayIntentBits;
+const client = new Client({ intents: [Guilds, GuildVoiceStates, MessageContent, GuildMessages, GuildMembers] });
+
+client.slashCommands = new Collection<string, SlashCommand>();
+client.commands = new Collection<string, Command>();
+client.cooldowns = new Collection<string, number>();
+
+const handlersDir = 'handlers';
+
+readdirSync(path.join(path.scriptPath, handlersDir)).forEach(async handler => {
+  if (!handler.endsWith('.js')) return;
+
+  const init = (await import(`./${handlersDir}/${handler}`)).default;
+
+  init(client);
+});
+
+client.login(process.env.TOKEN);
+
+startRestServer();

@@ -1,0 +1,8 @@
+{
+  "presets": [["@babel/preset-env", { "modules": false }], "@babel/preset-typescript"],
+  "plugins": ["@babel/plugin-syntax-import-attributes"],
+  "targets": "node 20",
+  "comments": false,
+  "minified": true,
+  "compact": true
+}

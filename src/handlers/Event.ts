@@ -1,19 +1,24 @@
-import { Client } from "discord.js";
-import { readdirSync } from "fs";
-import { join } from "path";
-import { color } from "../functions";
-import { BotEvent } from "../types";
+import chalk from 'chalk';
+import { readdir } from 'fs/promises';
+import path from 'path';
 
-module.exports = (client: Client) => {
-    let eventsDir = join(__dirname, "../events")
+import { Log } from '../logger.js';
 
-    readdirSync(eventsDir).forEach(file => {
-        if (!file.endsWith(".js")) return;
-        let event: BotEvent = require(`${eventsDir}/${file}`).default
-        event.once ?
-            client.once(event.name, (...args) => event.execute(...args))
-            :
-            client.on(event.name, (...args) => event.execute(...args))
-        console.log(color("text", `🌠 Successfully loaded event ${color("variable", event.name)}`))
-    })
+import type { Client } from 'discord.js';
+import type { BotEvent } from '../types.js';
+
+export default async function (client: Client) {
+  const eventsDir = 'events';
+
+  const eventFiles = await readdir(path.join(path.scriptPath, eventsDir));
+
+  for (const file of eventFiles) {
+    if (!file.endsWith('.js')) continue;
+
+    const event: BotEvent = (await import(`../${eventsDir}/${file}`)).default;
+
+    event.once ? client.once(event.name, event.execute) : client.on(event.name, event.execute);
+
+    Log.success(`Successfully loaded event ${chalk.white.bold(event.name)}`);
+  }
 }
