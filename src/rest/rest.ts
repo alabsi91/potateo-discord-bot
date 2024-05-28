@@ -16,8 +16,7 @@ fastify.get(config.rest.zip, (request, reply) => {
   const zipPath = getZipFilePath(fileName);
 
   if (!zipPath) {
-    reply.code(404);
-    reply.send('File not found');
+    reply.code(404).send('File not found');
     return;
   }
 

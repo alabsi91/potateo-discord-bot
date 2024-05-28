@@ -4,15 +4,15 @@ import path from 'path';
 import config from '../.config.json' with { type: 'json' };
 import { formatUrlRoute, searchFiles } from '../utils.js';
 
-export function getZipFilePath(encodedFileName: string) {
-  const decodedFileName = decodeURIComponent(encodedFileName);
+export function getZipFilePath(zipFileName: string) {
   const zipDir = path.prepare(config.torrent.zipDir);
-  const zipFullPath = path.join(zipDir, decodedFileName);
+  const zipFullPath = path.join(zipDir, encodeURI(zipFileName));
 
   if (!existsSync(zipFullPath)) {
     return null;
   }
-  return path.join(zipDir, decodedFileName);
+
+  return zipFullPath;
 }
 
 export function getVideoFilePath(encodedFileName: string): string | null {
