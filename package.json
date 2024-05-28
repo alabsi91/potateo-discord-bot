@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node --no-warnings=ExperimentalWarning build/index.js",
-    "build": "babel src -d build --extensions .ts --copy-files",
+    "build": "babel src -d build --extensions .ts --copy-files --include-dotfiles",
     "test": "tsc --noEmit && eslint src/**/*.ts",
     "create-slash-command": "node scripts/createSlashCommand.js",
     "create-command": "node scripts/createCommand.js",
