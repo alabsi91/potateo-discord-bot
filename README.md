@@ -76,3 +76,40 @@ type FirebaseData = {
   prefix: string;
 };
 ```
+
+## .config.json
+
+- Relative paths are relative to `index.js` not to `package.json`.
+
+- Note: `.config.json` will be copied to the build folder.
+
+```json
+{
+  // the default command prefix, can be changed later using slash command
+  "prefix": "!",
+  "log": {
+    // write logs to file
+    "enabled": false,
+    "level": ["INFO", "WARNING", "ERROR", "SUCCESS"],
+    "path": "./bot.log"
+  },
+  "torrent": {
+    "downloadDir": "./assets/downloads",
+    "zipDir": "./assets/zips",
+    // video extension to lookup after downloading them
+    "videoExtensions": ["mp4", "mkv", "avi", "webm", "mov", "flv"]
+  },
+  "rest": {
+    "host": "127.0.0.1",
+    "port": 3000,
+    "domain": "http://127.0.0.1:3000",
+    // do not remove `:fileName` from the routes
+    "zip": "/zip/:fileName",
+    "streamLink": "/stream/:fileName",
+    "downloadLink": "/download/:fileName",
+    "browserLink": "/browser/:fileName"
+  },
+  // temporary file created when generating tts
+  "ttsTempFile": "./assets/sounds/say.mp3"
+}
+```
