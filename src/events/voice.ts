@@ -82,7 +82,7 @@ const event: BotEvent<Events.VoiceStateUpdate> = {
         '.',
       );
 
-    if (left.is || joined.user?.bot) return;
+    if (!joined.is || left.is || joined.user?.bot) return;
 
     const channelId = joined.channel?.id;
     const guildId = joined.guild.id;
@@ -112,7 +112,20 @@ const event: BotEvent<Events.VoiceStateUpdate> = {
     }
 
     const getUser = welcomeMessages.filter(user => user.id === newState.member?.id)[0];
-    if (!getUser) return;
+    if (!getUser) {
+      Log.warn(
+        'Could not find a welcome voice messages for the user',
+        chalk.white.bold(joined.user?.tag),
+        'with ID',
+        chalk.white.bold(joined.user?.id),
+        'in the server',
+        chalk.white.bold(joined.guild.name),
+        'with ID',
+        chalk.white.bold(guildId),
+        '.',
+      );
+      return;
+    }
 
     const { message, lang } = getUser;
 
